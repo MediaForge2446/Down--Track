@@ -1,0 +1,112 @@
+<ui:FluentWindow x:Class="DownTrack.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="DownTrack" Height="720" Width="1100"
+        MinHeight="550" MinWidth="850"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <!-- סרגל כלים עליון -->
+            <RowDefinition Height="Auto"/>
+            <!-- תוכן הספרייה -->
+            <RowDefinition Height="*"/>
+            <!-- שורת סטטוס תחתונה -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Top Header & Actions -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Back / Forward Buttons -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4">
+                <ui:Button x:Name="BtnBack" Icon="{ui:SymbolIcon ArrowLeft24}" Click="BtnBack_Click" ToolTip="חזור"/>
+                <ui:Button x:Name="BtnForward" Icon="{ui:SymbolIcon ArrowRight24}" Click="BtnForward_Click" ToolTip="קדימה"/>
+            </StackPanel>
+
+            <!-- Breadcrumb / Current Path Display -->
+            <ui:TextBox Grid.Column="1" x:Name="TxtCurrentPath" Margin="12,0" 
+                        IsReadOnly="True" VerticalAlignment="Center"/>
+
+            <!-- Search box -->
+            <ui:TextBox Grid.Column="2" x:Name="TxtSearch" Width="220" Margin="0,0,12,0"
+                        PlaceholderText="חיפוש בספרייה..." 
+                        Icon="{ui:SymbolIcon Search24}" 
+                        TextChanged="TxtSearch_TextChanged"/>
+
+            <!-- Add Media Action Button -->
+            <ui:Button Grid.Column="3" x:Name="BtnAddMedia" 
+                       Appearance="Primary" 
+                       Content="הוסף מדיה" 
+                       Icon="{ui:SymbolIcon Add24}" 
+                       Click="BtnAddMedia_Click" 
+                       FontWeight="SemiBold"/>
+        </Grid>
+
+        <!-- Main Content Area: Explorer & Active Downloads Panel -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Files Grid -->
+            <Border Grid.Column="0" Background="{DynamicResource ApplicationBackgroundBrush}" 
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" 
+                    BorderThickness="1" CornerRadius="8">
+                <ListView x:Name="FilesList" MouseDoubleClick="FilesList_MouseDoubleClick">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="שם" Width="360" DisplayMemberBinding="{Binding Name}" />
+                            <GridViewColumn Header="גודל" Width="100" DisplayMemberBinding="{Binding SizeFormatted}" />
+                            <GridViewColumn Header="סוג" Width="80" DisplayMemberBinding="{Binding Extension}" />
+                            <GridViewColumn Header="תאריך שינוי" Width="160" DisplayMemberBinding="{Binding ModifiedDateFormatted}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Border>
+
+            <!-- Active Downloads / Staging Drawer (Right Side) -->
+            <Border Grid.Column="1" Width="280" Margin="12,0,0,0" 
+                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" 
+                    BorderThickness="1" CornerRadius="8" Padding="12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="הורדות פעילות" FontWeight="SemiBold" FontSize="14" Margin="0,0,0,8"/>
+
+                    <ListView Grid.Row="1" x:Name="ActiveDownloadsList">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,4">
+                                    <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis" FontWeight="Medium"/>
+                                    <ProgressBar Value="{Binding ProgressPercent}" Maximum="100" Height="4" Margin="0,4"/>
+                                    <TextBlock Text="{Binding Status}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Bottom Status -->
+        <Grid Grid.Row="2" Margin="0,8,0,0">
+            <TextBlock x:Name="LblStatus" Text="מוכן" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>
