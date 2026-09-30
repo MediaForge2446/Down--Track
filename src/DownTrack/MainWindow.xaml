@@ -29,8 +29,8 @@
             </Grid.ColumnDefinitions>
 
             <!-- Back / Forward Buttons -->
-            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4">
-                <ui:Button x:Name="BtnBack" Icon="{ui:SymbolIcon ArrowLeft24}" Click="BtnBack_Click" ToolTip="חזור"/>
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <ui:Button x:Name="BtnBack" Icon="{ui:SymbolIcon ArrowLeft24}" Click="BtnBack_Click" ToolTip="חזור" Margin="0,0,4,0"/>
                 <ui:Button x:Name="BtnForward" Icon="{ui:SymbolIcon ArrowRight24}" Click="BtnForward_Click" ToolTip="קדימה"/>
             </StackPanel>
 
