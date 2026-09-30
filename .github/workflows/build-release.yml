@@ -1,0 +1,58 @@
+name: Build & Release DownTrack
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore Dependencies
+        run: dotnet restore DownTrack.sln
+
+      - name: Build Core & App
+        run: dotnet publish src/DownTrack/DownTrack.csproj -c Release -r win-x64 --self-contained false -o publish/app
+
+      - name: Download Engine Binaries (yt-dlp, FFmpeg)
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path publish/app/bin
+          # Download yt-dlp
+          Invoke-WebRequest -Uri "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe" -OutFile "publish/app/bin/yt-dlp.exe"
+          
+          # Download FFmpeg Essentials
+          Invoke-WebRequest -Uri "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" -OutFile "ffmpeg.zip"
+          Expand-Archive ffmpeg.zip -DestinationPath ffmpeg_extracted
+          $ffmpegRoot = (Get-ChildItem -Path ffmpeg_extracted -Directory)[0].FullName
+          Copy-Item "$ffmpegRoot/bin/ffmpeg.exe" "publish/app/bin/ffmpeg.exe"
+          Copy-Item "$ffmpegRoot/bin/ffprobe.exe" "publish/app/bin/ffprobe.exe"
+
+      - name: Zip Full Package
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "publish/app/*" -DestinationPath "DownTrack-FullPackage.zip"
+
+      - name: Build WebSetup
+        run: dotnet publish src/DownTrack.WebSetup/DownTrack.WebSetup.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish/setup
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            publish/setup/DownTrack.WebSetup.exe
+            DownTrack-FullPackage.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
