@@ -14,7 +14,7 @@ public partial class App : Application
         AppLogger.Initialize("DownTrack");
         EnginePaths.EnsureDirectories();
 
-        // התאמה אוטומטית לעיצוב המערכת (Windows 11 Light/Dark)
-        ApplicationThemeManager.ApplySystemTheme();
+        // התאמה למצב Dark של האפליקציה
+        ApplicationThemeManager.Apply(ApplicationTheme.Dark);
     }
 }
