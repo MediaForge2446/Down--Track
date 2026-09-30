@@ -1,0 +1,19 @@
+## Build and output
+bin/
+obj/
+publish/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Visual Studio & Rider
+.vs/
+.idea/
+*.DotSettings.user
+
+## DownTrack runtime & temp bins
+/temp/
+*.log
+downloader.log
+installer.log
