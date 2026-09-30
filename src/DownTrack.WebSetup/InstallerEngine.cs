@@ -12,7 +12,7 @@ namespace DownTrack.WebSetup;
 public class InstallerEngine
 {
     // נתיב ההורדה של החבילה המאוחדת מ-GitHub Release שלך
-    public const string PackageUrl = "[https://github.com/MediaForge2446/Down-Track/releases/latest/download/DownTrack-FullPackage.zip](https://github.com/MediaForge2446/Down-Track/releases/latest/download/DownTrack-FullPackage.zip)";
+    public const string PackageUrl = "https://github.com/MediaForge2446/Down--Track/releases/latest/download/DownTrack-FullPackage.zip";
 
     public static string InstallDir =>
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DownTrack");
