@@ -76,8 +76,8 @@
                                     </StackPanel>
 
                                     <!-- Actions: Format & Quality -->
-                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
-                                        <ComboBox SelectedIndex="{Binding SelectedFormat, Mode=TwoWay, Converter={StaticResource EnumToIntConverter}}" Width="90">
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <ComboBox SelectedIndex="{Binding SelectedFormat, Mode=TwoWay, Converter={StaticResource EnumToIntConverter}}" Width="90" Margin="0,0,8,0">
                                             <ComboBoxItem Content="MP3"/>
                                             <ComboBoxItem Content="MP4"/>
                                         </ComboBox>
