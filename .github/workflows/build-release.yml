@@ -56,8 +56,9 @@ jobs:
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           if not exist publish\setup mkdir publish\setup
-          rc.exe /i src\DownTrack.WebSetup /fo src\DownTrack.WebSetup\setup.res src\DownTrack.WebSetup\setup.rc
-          cl.exe /O2 /W3 /EHsc src\DownTrack.WebSetup\main.cpp src\DownTrack.WebSetup\setup.res /Fe:publish\setup\DownTrack.WebSetup.exe /link /SUBSYSTEM:WINDOWS user32.lib gdi32.lib shell32.lib comctl32.lib winhttp.lib ole32.lib advapi32.lib
+          cd src\DownTrack.WebSetup
+          rc.exe /fo setup.res setup.rc
+          cl.exe /O2 /W3 /EHsc main.cpp setup.res /Fe:..\..\publish\setup\DownTrack.WebSetup.exe /link /SUBSYSTEM:WINDOWS user32.lib gdi32.lib shell32.lib comctl32.lib winhttp.lib ole32.lib advapi32.lib
 
       # 5. יצירת GitHub Release
       - name: Create GitHub Release
