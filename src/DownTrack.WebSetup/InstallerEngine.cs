@@ -133,12 +133,12 @@ public class InstallerEngine
     private static void CreateVbsShortcut(string shortcutPath, string targetPath)
     {
         var vbsScript = $@"
-Set oWS = WScript.CreateObject(""WScript.Shell"")
-sLinkFile = ""{shortcutPath}""
+Set oWS = WScript.CreateObject(""""WScript.Shell"""")
+sLinkFile = """"{shortcutPath}""
 Set oLink = oWS.CreateShortcut(sLinkFile)
-oLink.TargetPath = ""{targetPath}""
-oLink.WorkingDirectory = ""{Path.GetDirectoryName(targetPath)}""
-oLink.Description = ""DownTrack - Media Library Manager""
+oLink.TargetPath = """"{targetPath}""
+oLink.WorkingDirectory = """"{Path.GetDirectoryName(targetPath)}""
+oLink.Description = """"DownTrack - Media Library Manager""""
 oLink.Save";
 
         var tempVbs = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.vbs");
@@ -147,7 +147,7 @@ oLink.Save";
         var p = Process.Start(new ProcessStartInfo
         {
             FileName = "cscript.exe",
-            Arguments = $"//Nologo "{tempVbs}"",
+            Arguments = $"//Nologo \"{tempVbs}\"",
             CreateNoWindow = true,
             UseShellExecute = false
         });
