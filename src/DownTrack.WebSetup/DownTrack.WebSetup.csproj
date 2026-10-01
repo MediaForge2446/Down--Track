@@ -8,18 +8,9 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
     <RootNamespace>DownTrack.WebSetup</RootNamespace>
-    <!-- קיבוץ לקובץ EXE יחיד ועצמאי לחלוטין -->
     <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>true</SelfContained>
+    <SelfContained>false</SelfContained>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Assets\" />
-  </ItemGroup>
 
 </Project>
