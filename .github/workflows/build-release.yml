@@ -27,37 +27,45 @@ jobs:
       - name: Restore Dependencies
         run: dotnet restore DownTrack.sln
 
+      # 1. בניית התוכנה הראשית עצמאית ומלאה (כולל .NET 8 בפנים)
       - name: Build Core & App
-        run: dotnet publish src/DownTrack/DownTrack.csproj -c Release -r win-x64 --self-contained false -o publish/app
+        run: dotnet publish src/DownTrack/DownTrack.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish/app
 
-      - name: Download Engine Binaries (yt-dlp, FFmpeg)
+      # 2. הורדת כלי המנוע (yt-dlp, FFmpeg)
+      - name: Download Engine Binaries
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path publish/app/bin
-          # Download yt-dlp
-          Invoke-WebRequest -Uri "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe" -OutFile "publish/app/bin/yt-dlp.exe"
-          
-          # Download FFmpeg Essentials
-          Invoke-WebRequest -Uri "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" -OutFile "ffmpeg.zip"
-          Expand-Archive ffmpeg.zip -DestinationPath ffmpeg_extracted
-          $ffmpegRoot = (Get-ChildItem -Path ffmpeg_extracted -Directory)[0].FullName
-          Copy-Item "$ffmpegRoot/bin/ffmpeg.exe" "publish/app/bin/ffmpeg.exe"
-          Copy-Item "$ffmpegRoot/bin/ffprobe.exe" "publish/app/bin/ffprobe.exe"
+          Invoke-WebRequest -Uri "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe" -OutFile publish/app/bin/yt-dlp.exe
+          Invoke-WebRequest -Uri "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" -OutFile ffmpeg.zip
+          Expand-Archive -Path ffmpeg.zip -DestinationPath ffmpeg_temp
+          $ffmpegFolder = Get-ChildItem -Directory ffmpeg_temp | Select-Object -First 1
+          Copy-Item "$($ffmpegFolder.FullName)/bin/ffmpeg.exe" -Destination publish/app/bin/ffmpeg.exe
+          Copy-Item "$($ffmpegFolder.FullName)/bin/ffprobe.exe" -Destination publish/app/bin/ffprobe.exe
+          Remove-Item -Recurse -Force ffmpeg.zip, ffmpeg_temp
 
+      # 3. אריזת החבילה המלאה (FullPackage.zip)
       - name: Zip Full Package
         shell: pwsh
         run: |
-          Compress-Archive -Path "publish/app/*" -DestinationPath "DownTrack-FullPackage.zip"
+          Compress-Archive -Path publish/app/* -DestinationPath DownTrack-FullPackage.zip
 
-      - name: Build WebSetup
-        run: dotnet publish src/DownTrack.WebSetup/DownTrack.WebSetup.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o publish/setup
+      # 4. בניית המתקין הקל (Native Win32 - פחות מ-1MB)
+      - name: Build Lightweight WebSetup
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          if not exist publish\setup mkdir publish\setup
+          rc.exe /i src\DownTrack.WebSetup /fo src\DownTrack.WebSetup\setup.res src\DownTrack.WebSetup\setup.rc
+          cl.exe /O2 /W3 /EHsc src\DownTrack.WebSetup\main.cpp src\DownTrack.WebSetup\setup.res /Fe:publish\setup\DownTrack.WebSetup.exe /link /SUBSYSTEM:WINDOWS user32.lib gdi32.lib shell32.lib comctl32.lib winhttp.lib ole32.lib advapi32.lib
 
+      # 5. יצירת GitHub Release
       - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            publish/setup/DownTrack.WebSetup.exe
             DownTrack-FullPackage.zip
+            publish/setup/DownTrack.WebSetup.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
