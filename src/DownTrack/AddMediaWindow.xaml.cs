@@ -55,7 +55,7 @@ public partial class AddMediaWindow : FluentWindow
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"שגיאה בשליפת המידע: {ex.Message}", "DownTrack", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show(this, $"שגיאה בטעינת הקישור: {ex.Message}", "שגיאה", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
         }
         finally
         {
