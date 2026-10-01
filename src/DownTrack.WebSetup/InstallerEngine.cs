@@ -28,8 +28,7 @@ public class InstallerEngine
             Directory.CreateDirectory(logDir);
 
             var line = $"[{DateTime.UtcNow:HH:mm:ss.fff}] {message}";
-            if (ex != null) line += $" | EXCEPTION: {ex.Message}
-{ex.StackTrace}";
+            if (ex != null) line += $" | EXCEPTION: {ex.Message} | {ex.StackTrace}";
 
             File.AppendAllText(LogFilePath, line + Environment.NewLine);
             Console.WriteLine(line);
@@ -148,7 +147,7 @@ oLink.Save";
         var p = Process.Start(new ProcessStartInfo
         {
             FileName = "cscript.exe",
-            Arguments = $"//Nologo \"{tempVbs}\"",
+            Arguments = $"//Nologo "{tempVbs}"",
             CreateNoWindow = true,
             UseShellExecute = false
         });
