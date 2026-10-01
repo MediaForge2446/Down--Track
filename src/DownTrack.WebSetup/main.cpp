@@ -7,9 +7,12 @@
 #include <string>
 #include <vector>
 #include <thread>
+#include <stdio.h>
+#include <wchar.h>
 
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "winhttp.lib")
+#pragma comment(linker,"\\\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\\\"")
 
 const wchar_t* PACKAGE_URL = L"https://github.com/MediaForge2446/Down--Track/releases/latest/download/DownTrack-FullPackage.zip";
 
