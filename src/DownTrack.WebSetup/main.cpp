@@ -10,8 +10,14 @@
 #include <stdio.h>
 #include <wchar.h>
 
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "gdi32.lib")
+#pragma comment(lib, "shell32.lib")
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "winhttp.lib")
+#pragma comment(lib, "ole32.lib")
+#pragma comment(lib, "advapi32.lib")
+#pragma comment(lib, "uuid.lib")
 
 const wchar_t* PACKAGE_URL = L"https://github.com/MediaForge2446/Down--Track/releases/latest/download/DownTrack-FullPackage.zip";
 
