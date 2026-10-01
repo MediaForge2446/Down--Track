@@ -50,7 +50,7 @@ jobs:
           Compress-Archive -Path "publish/app/*" -DestinationPath "DownTrack-FullPackage.zip"
 
       - name: Build WebSetup
-        run: dotnet publish src/DownTrack.WebSetup/DownTrack.WebSetup.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish/setup
+        run: dotnet publish src/DownTrack.WebSetup/DownTrack.WebSetup.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o publish/setup
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
